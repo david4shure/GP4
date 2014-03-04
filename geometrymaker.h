@@ -196,9 +196,8 @@ void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOut
     *idxIter = i;
     *++idxIter = i + 1;
     *++idxIter = i + 3;
+
     *++idxIter = i;
-
-
     *++idxIter = i + 3;
     *++idxIter = i + 2;
     ++idxIter;
