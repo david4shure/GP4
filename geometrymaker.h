@@ -121,34 +121,36 @@ void makeOctahedron(float h, VtxOutIter vtxIter, IdxOutIter idxIter) {
   // Normals should point outward and be normal to faces of octahedron.
   
   // Top side
-  { *vtxIter = GenericVertex(0, 0, -h, h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+
   { *vtxIter = GenericVertex(h, 0, 0, h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+  { *vtxIter = GenericVertex(0, 0, -h, h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, h, 0, h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
 
+  { *vtxIter = GenericVertex(0, 0, h, h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(h, 0, 0, h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, h, 0, h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
-  { *vtxIter = GenericVertex(0, 0, h, h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
 
-  { *vtxIter = GenericVertex(-h, 0, 0, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, h, 0, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+  { *vtxIter = GenericVertex(-h, 0, 0, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, 0, h, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
 
   { *vtxIter = GenericVertex(-h, 0, 0, -h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
-  { *vtxIter = GenericVertex(0, 0, -h, -h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, h, 0, -h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+  { *vtxIter = GenericVertex(0, 0, -h, -h, h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+
 
   // Bottom Side
   { *vtxIter = GenericVertex(0, 0, -h, h, -h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(h, 0, 0, h, -h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, -h, 0, h, -h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
 
-  { *vtxIter = GenericVertex(h, 0, 0, h, -h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
-  { *vtxIter = GenericVertex(0, -h, 0, h, -h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, 0, h, h, -h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+  { *vtxIter = GenericVertex(0, -h, 0, h, -h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+  { *vtxIter = GenericVertex(h, 0, 0, h, -h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
 
-  { *vtxIter = GenericVertex(-h, 0, 0, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, -h, 0, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, 0, h, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
+  { *vtxIter = GenericVertex(-h, 0, 0, -h, h, h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
 
   { *vtxIter = GenericVertex(-h, 0, 0, -h, -h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
   { *vtxIter = GenericVertex(0, 0, -h, -h, -h, -h, 1, 1, 1, 1, 1, 1, 1, 1); ++vtxIter; };
@@ -179,8 +181,6 @@ void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOut
 
   const double radPerSlice = 2 * CS150_PI / slices;
 
-  vector<double> longSin(slices + 1), longCos(slices + 1);
-
   for (int i = 0; i < slices + 1; i++) {
     for (int j = 0; j < 2; j++) {
       float x = cos(radPerSlice * i);
@@ -189,7 +189,6 @@ void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOut
       
       *vtxIter = GenericVertex(x * radius, y, z * radius, x, 0, z, 1, 1, 1, 1, 1, 1, 1, 1);
       vtxIter++;
-
     }
   }
 
@@ -197,12 +196,10 @@ void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOut
     *idxIter = i;
     *++idxIter = i + 1;
     *++idxIter = i + 3;
-
     *++idxIter = i;
 
 
     *++idxIter = i + 3;
-
     *++idxIter = i + 2;
     ++idxIter;
   }

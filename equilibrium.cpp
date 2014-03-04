@@ -210,8 +210,8 @@ static shared_ptr<Geometry> g_cube, g_sphere, g_octa, g_tube;
 
 static const Cvec3 g_light1(2.0, 3.0, 14.0), g_light2(-2, -3.0, -5.0);  // define two light positions in world space
 static Matrix4 g_eyeRbt = Matrix4::makeTranslation(Cvec3(0.0, 3.25, 10.0));
-static const int g_numObjects = 1;
-static Matrix4 g_objectRbt[g_numObjects] = {Matrix4::makeTranslation(Cvec3(0,4,0))}; // each object gets its own RBT  
+static const int g_numObjects = 3;
+static Matrix4 g_objectRbt[g_numObjects] = {Matrix4::makeTranslation(Cvec3(0,4,0)), Matrix4::makeTranslation(Cvec3(-4,3,0)), Matrix4::makeTranslation(Cvec3(4,3,0))}; // each object gets its own RBT  
 
 ///////////////// END OF G L O B A L S //////////////////////////////////////////////////
 
@@ -308,11 +308,31 @@ static void drawScene() {
   Matrix4 NMVM = normalMatrix(MVM);
   sendModelViewNormalMatrix(curSS, MVM, NMVM);
   safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
+
+  g_cube->draw(curSS);
   						     // color will cycle once as g_animClock goes from 0 to 1
 
+  g_objectRbt[1] = g_objectRbt[1] * Matrix4::makeXRotation(g_animIncrement*360); // object 0 rotates around its y-axis
+
+
+  MVM = invEyeRbt * g_objectRbt[1];
+  NMVM = normalMatrix(MVM);
+  sendModelViewNormalMatrix(curSS, MVM, NMVM);
+  safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
+
+
   g_tube->draw(curSS);
+
+  g_objectRbt[2] = g_objectRbt[2] * rotatorY; // object 0 rotates around its y-axis
+
+
+  MVM = invEyeRbt * g_objectRbt[2];
+  NMVM = normalMatrix(MVM);
+  sendModelViewNormalMatrix(curSS, MVM, NMVM);
+  safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
+
   g_octa->draw(curSS);
-  g_cube->draw(curSS);
+
 
   // TODO: Remove cube. Add octahedron, tube, and sphere to scene and make them chase each other.
 }
