@@ -245,7 +245,7 @@ static void initObjects() {
   getTubeVbIbLen(36, vbLen, ibLen);
   vtx.resize(vbLen);
   idx.resize(ibLen);
-  makeTube(1, 2, 36, vtx.begin(), idx.begin());
+  makeTube(1, 4, 36, vtx.begin(), idx.begin());
   g_tube.reset(new Geometry(&vtx[0], &idx[0], vbLen, ibLen));
   
 }
@@ -302,7 +302,7 @@ static void drawScene() {
   safe_glUniform3f(curSS.h_uLight, eyeLight1[0], eyeLight1[1], eyeLight1[2]); // shaders need light positions
   safe_glUniform3f(curSS.h_uLight2, eyeLight2[0], eyeLight2[1], eyeLight2[2]);
 
-  //  g_objectRbt[0] = g_objectRbt[0] * rotatorY; // object 0 rotates around its y-axis
+  g_objectRbt[0] = g_objectRbt[0] * rotatorY; // object 0 rotates around its y-axis
 
   Matrix4 MVM = invEyeRbt * g_objectRbt[0];
   Matrix4 NMVM = normalMatrix(MVM);
@@ -311,6 +311,8 @@ static void drawScene() {
   						     // color will cycle once as g_animClock goes from 0 to 1
 
   g_tube->draw(curSS);
+  g_octa->draw(curSS);
+  g_cube->draw(curSS);
 
   // TODO: Remove cube. Add octahedron, tube, and sphere to scene and make them chase each other.
 }

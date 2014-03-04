@@ -2,9 +2,6 @@
 #define GEOMETRYMAKER_H
 
 #include <cmath>
-#include <iostream>
-#include <vector>
-
 #include "cvec.h"
 
 //--------------------------------------------------------------------------------
@@ -168,7 +165,7 @@ void makeOctahedron(float h, VtxOutIter vtxIter, IdxOutIter idxIter) {
 inline void getTubeVbIbLen(int slices, int& vbLen, int& ibLen) {
   // TODO
   vbLen = 2 * slices + 2;
-  ibLen = 6 * (slices * 2);
+  ibLen = 6 * slices;
 }
 
 template<typename VtxOutIter, typename IdxOutIter>
@@ -178,7 +175,8 @@ void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOut
   // Normals should point away from the axis of the cylinder
   assert(slices > 1);
   using namespace std;
-  
+
+
   const double radPerSlice = 2 * CS150_PI / slices;
 
   vector<double> longSin(slices + 1), longCos(slices + 1);
@@ -198,11 +196,14 @@ void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOut
   for (int i = 0; i < (slices * 2); i+= 2) {
     *idxIter = i;
     *++idxIter = i + 1;
-    *++idxIter = i + 2;
-
-    *++idxIter = i + 1;
-    *++idxIter = i + 2;
     *++idxIter = i + 3;
+
+    *++idxIter = i;
+
+
+    *++idxIter = i + 3;
+
+    *++idxIter = i + 2;
     ++idxIter;
   }
 }
