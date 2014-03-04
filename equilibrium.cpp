@@ -227,10 +227,10 @@ static void initObjects() {
   makeCube(2, vtx.begin(), idx.begin());
   g_cube.reset(new Geometry(&vtx[0], &idx[0], vbLen, ibLen));
 
-  getSphereVbIbLen(20, 20, vbLen, ibLen);
+  getSphereVbIbLen(30, 20, vbLen, ibLen);
   vtx.resize(vbLen);
   idx.resize(ibLen);
-  makeSphere(1.0, 20, 20, vtx.begin(), idx.begin());
+  makeSphere(1.0, 30, 20, vtx.begin(), idx.begin());
   g_sphere.reset(new Geometry(&vtx[0], &idx[0], vbLen, ibLen));
 
   // TODO: add octahedron, tube
@@ -309,7 +309,7 @@ static void drawScene() {
   sendModelViewNormalMatrix(curSS, MVM, NMVM);
   safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
 
-  g_cube->draw(curSS);
+  g_sphere->draw(curSS);
   						     // color will cycle once as g_animClock goes from 0 to 1
 
   g_objectRbt[1] = g_objectRbt[1] * Matrix4::makeXRotation(g_animIncrement*360); // object 0 rotates around its y-axis
