@@ -2,6 +2,8 @@
 #define GEOMETRYMAKER_H
 
 #include <cmath>
+#include <iostream>
+#include <vector>
 
 #include "cvec.h"
 
@@ -165,14 +167,44 @@ void makeOctahedron(float h, VtxOutIter vtxIter, IdxOutIter idxIter) {
 
 inline void getTubeVbIbLen(int slices, int& vbLen, int& ibLen) {
   // TODO
-  
+  vbLen = 2 * slices + 2;
+  ibLen = 6 * (slices * 2);
 }
 
 template<typename VtxOutIter, typename IdxOutIter>
 void makeTube(float radius, float height, int slices, VtxOutIter vtxIter, IdxOutIter idxIter) {
-	// TODO
-	// A hollow cylindrical tube with given radius and height 
-	// Normals should point away from the axis of the cylinder
+  // TODO
+  // A hollow cylindrical tube with given radius and height 
+  // Normals should point away from the axis of the cylinder
+  assert(slices > 1);
+  using namespace std;
+  
+  const double radPerSlice = 2 * CS150_PI / slices;
+
+  vector<double> longSin(slices + 1), longCos(slices + 1);
+
+  for (int i = 0; i < slices + 1; i++) {
+    for (int j = 0; j < 2; j++) {
+      float x = cos(radPerSlice * i);
+      float y = j % 2 == 0 ? -1 * height / 2 : height / 2;
+      float z = sin(radPerSlice * i);
+      
+      *vtxIter = GenericVertex(x * radius, y, z * radius, x, 0, z, 1, 1, 1, 1, 1, 1, 1, 1);
+      vtxIter++;
+
+    }
+  }
+
+  for (int i = 0; i < (slices * 2); i+= 2) {
+    *idxIter = i;
+    *++idxIter = i + 1;
+    *++idxIter = i + 2;
+
+    *++idxIter = i + 1;
+    *++idxIter = i + 2;
+    *++idxIter = i + 3;
+    ++idxIter;
+  }
 }
 
 inline void getSphereVbIbLen(int slices, int stacks, int& vbLen, int& ibLen) {

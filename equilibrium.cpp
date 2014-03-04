@@ -204,7 +204,7 @@ struct Geometry {
 };
 
 // Vertex buffer and index buffer associated with the different geometries
-static shared_ptr<Geometry> g_cube, g_sphere, g_octa; 
+static shared_ptr<Geometry> g_cube, g_sphere, g_octa, g_tube;
 
 // --------- Scene
 
@@ -240,6 +240,13 @@ static void initObjects() {
   idx.resize(ibLen);
   makeOctahedron(2, vtx.begin(), idx.begin());
   g_octa.reset(new Geometry(&vtx[0], &idx[0], vbLen, ibLen));
+
+
+  getTubeVbIbLen(36, vbLen, ibLen);
+  vtx.resize(vbLen);
+  idx.resize(ibLen);
+  makeTube(1, 2, 36, vtx.begin(), idx.begin());
+  g_tube.reset(new Geometry(&vtx[0], &idx[0], vbLen, ibLen));
   
 }
 
@@ -295,7 +302,7 @@ static void drawScene() {
   safe_glUniform3f(curSS.h_uLight, eyeLight1[0], eyeLight1[1], eyeLight1[2]); // shaders need light positions
   safe_glUniform3f(curSS.h_uLight2, eyeLight2[0], eyeLight2[1], eyeLight2[2]);
 
-  g_objectRbt[0] = g_objectRbt[0] * rotatorY; // object 0 rotates around its y-axis
+  //  g_objectRbt[0] = g_objectRbt[0] * rotatorY; // object 0 rotates around its y-axis
 
   Matrix4 MVM = invEyeRbt * g_objectRbt[0];
   Matrix4 NMVM = normalMatrix(MVM);
@@ -303,7 +310,7 @@ static void drawScene() {
   safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
   						     // color will cycle once as g_animClock goes from 0 to 1
 
-  g_octa->draw(curSS);
+  g_tube->draw(curSS);
 
   // TODO: Remove cube. Add octahedron, tube, and sphere to scene and make them chase each other.
 }
