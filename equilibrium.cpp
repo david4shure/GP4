@@ -12,6 +12,8 @@
 //   Some code is from  _Foundations of 3D Computer Graphics_
 //   by Steven Gortler.  See AUTHORS file for more details.
 //
+//
+//   Worked with: Matthew Johnston
 ////////////////////////////////////////////////////////////////////////
 
 #include <vector>
