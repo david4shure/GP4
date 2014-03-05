@@ -294,6 +294,8 @@ static void drawScene() {
   // 360 degrees is covered for every cycle of the clock parameter g_animClock
   // from 0 to 1.
   const Matrix4 rotatorY = Matrix4::makeYRotation(g_animIncrement*360); // rotate 360 per parameter cycle 0..1
+  const Matrix4 rotatorX = Matrix4::makeXRotation(g_animIncrement*360);
+  const Matrix4 rotatorZ = Matrix4::makeZRotation(g_animIncrement*360);
 
   const ShaderState& curSS = *g_shaderStates[g_activeShader]; // alias for currently selected shader
 
@@ -302,17 +304,17 @@ static void drawScene() {
   safe_glUniform3f(curSS.h_uLight, eyeLight1[0], eyeLight1[1], eyeLight1[2]); // shaders need light positions
   safe_glUniform3f(curSS.h_uLight2, eyeLight2[0], eyeLight2[1], eyeLight2[2]);
 
-  g_objectRbt[0] = g_objectRbt[0] * rotatorY; // object 0 rotates around its y-axis
+  g_objectRbt[0] = g_objectRbt[0] * rotatorZ * rotatorX; // object 0 rotates around its x-axis
 
   Matrix4 MVM = invEyeRbt * g_objectRbt[0];
   Matrix4 NMVM = normalMatrix(MVM);
   sendModelViewNormalMatrix(curSS, MVM, NMVM);
   safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
 
-  g_sphere->draw(curSS);
+  g_tube->draw(curSS);
   						     // color will cycle once as g_animClock goes from 0 to 1
 
-  g_objectRbt[1] = g_objectRbt[1] * Matrix4::makeXRotation(g_animIncrement*360); // object 0 rotates around its y-axis
+  g_objectRbt[1] = g_objectRbt[0] * rotatorY * inv(g_objectRbt[0]) * g_objectRbt[1]; // object 0 rotates around its y-axis
 
 
   MVM = invEyeRbt * g_objectRbt[1];
@@ -321,10 +323,24 @@ static void drawScene() {
   safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
 
 
-  g_tube->draw(curSS);
+  g_sphere->draw(curSS);
 
-  g_objectRbt[2] = g_objectRbt[2] * rotatorY; // object 0 rotates around its y-axis
+  Cvec3 sphereCoords = Cvec3(g_objectRbt[1](0, 3), g_objectRbt[1](1, 3), g_objectRbt[1](2, 3));
+  Cvec3 octaCoords = Cvec3(g_objectRbt[2](0, 3), g_objectRbt[2](1, 3), g_objectRbt[2](2, 3));
 
+  Cvec3 toSphere = sphereCoords - octaCoords;
+
+  Matrix4 newMatrix = Matrix4();
+  newMatrix(0, 3) = toSphere[0];
+  newMatrix(1, 3) = toSphere[1];
+  newMatrix(2, 3) = toSphere[2];
+  newMatrix(3, 3) = 1;
+  
+  Matrix4 translation = g_objectRbt[2].makeTranslation(toSphere);
+
+  Matrix4 scale = Matrix4(1);
+
+  g_objectRbt[2] = transFact(transFact(g_objectRbt[2]) * newMatrix * inv(g_objectRbt[1])); // The octahedron should move towards the sphere
 
   MVM = invEyeRbt * g_objectRbt[2];
   NMVM = normalMatrix(MVM);
@@ -332,7 +348,6 @@ static void drawScene() {
   safe_glUniform3f(curSS.h_uColor, 1.0-g_animClock, 0.0, g_animClock); // use clock parameter to color object
 
   g_octa->draw(curSS);
-
 
   // TODO: Remove cube. Add octahedron, tube, and sphere to scene and make them chase each other.
 }
