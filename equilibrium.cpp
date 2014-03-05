@@ -213,7 +213,7 @@ static shared_ptr<Geometry> g_cube, g_sphere, g_octa, g_tube;
 static const Cvec3 g_light1(2.0, 3.0, 14.0), g_light2(-2, -3.0, -5.0);  // define two light positions in world space
 static Matrix4 g_eyeRbt = Matrix4::makeTranslation(Cvec3(0.0, 3.25, 10.0));
 static const int g_numObjects = 3;
-static Matrix4 g_objectRbt[g_numObjects] = {Matrix4::makeTranslation(Cvec3(0,4,0)), Matrix4::makeTranslation(Cvec3(-4,3,0)), Matrix4::makeTranslation(Cvec3(4,3,0))}; // each object gets its own RBT  
+static Matrix4 g_objectRbt[g_numObjects] = {Matrix4::makeTranslation(Cvec3(0,4,0)) * Matrix4::makeXRotation(CS150_PI / 4), Matrix4::makeTranslation(Cvec3(-4,3,0)), Matrix4::makeTranslation(Cvec3(4,3,0))}; // each object gets its own RBT  
 
 ///////////////// END OF G L O B A L S //////////////////////////////////////////////////
 
